@@ -1,6 +1,7 @@
 package com.rajnish.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,33 +12,53 @@ import com.rajnish.repositroy.ContactRepository;
 @Service
 public class ContactServiceImple implements ContactService {
 	@Autowired
-	private ContactRepository contactRepository;
+	private ContactRepository repo;
 
 	public String save(Contact contact) {
 		
-		contactRepository.save(contact);
-		return "recored Sucessfully submited";
+		 contact = repo.save(contact);
+		 if(contact.getContactId()!=null) {
+			 return "recored submited sucessfully";
+		 }
+		 else {
+			 return "recored submited feild ";
+		 }
+		
 	}
 	public List<Contact> show() {
 		
-		return contactRepository.findAll();
+		return repo.findAll();
 	}
 
 	public Contact getContactById(Integer contactId) {
-		
+		Optional<Contact> findById = repo.findById(contactId);
+		if(findById.isPresent()) {
+			return findById.get();
+		}
 		return null;
 	}
 
 	
 	public String update(Contact contact) {
-		
-		return null;
+		Contact save = repo.save(contact);
+		if(repo.existsById(contact.getContactId())) {
+			repo.save(contact);
+			return "record update";
+		}
+		else {
+			return "recored updated unsucessfull";
+		}
 	}
 
 	
 	public String delete(Integer contactId) {
-		contactRepository.delete(contactId);
-		return "contact Delete sucessfully";
+		if(repo.existsById(contactId)) {
+			repo.deleteById(contactId);
+			return "record delete sucessfully";
+		}
+		else {
+			return "record unsucessfully";
+		}
 	}
 	
 }

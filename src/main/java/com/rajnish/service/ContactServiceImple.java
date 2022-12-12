@@ -11,13 +11,14 @@ import com.rajnish.repositroy.ContactRepository;
 
 @Service
 public class ContactServiceImple implements ContactService {
+	
 	@Autowired
 	private ContactRepository repo;
 
 	public String save(Contact contact) {
 		
 		 contact = repo.save(contact);
-		 if(contact.getContactId()!=null) {
+		 if(contact.getId()!=null) {
 			 return "recored submited sucessfully";
 		 }
 		 else {
@@ -30,8 +31,8 @@ public class ContactServiceImple implements ContactService {
 		return repo.findAll();
 	}
 
-	public Contact getContactById(Integer contactId) {
-		Optional<Contact> findById = repo.findById(contactId);
+	public Contact getContactById(Integer Id) {
+		Optional<Contact> findById = repo.findById(Id);
 		if(findById.isPresent()) {
 			return findById.get();
 		}
@@ -39,9 +40,8 @@ public class ContactServiceImple implements ContactService {
 	}
 
 	
-	public String update(Contact contact) {
-		Contact save = repo.save(contact);
-		if(repo.existsById(contact.getContactId())) {
+	public String update(Contact contact){
+		if(repo.existsById(contact.getId())) {
 			repo.save(contact);
 			return "record update";
 		}
@@ -51,9 +51,9 @@ public class ContactServiceImple implements ContactService {
 	}
 
 	
-	public String delete(Integer contactId) {
-		if(repo.existsById(contactId)) {
-			repo.deleteById(contactId);
+	public String delete(Integer Id) {
+		if(repo.existsById(Id)) {
+			repo.deleteById(Id);
 			return "record delete sucessfully";
 		}
 		else {
